@@ -1,0 +1,40 @@
+{
+  parserClass="com.enmo.dbaas.rcescript.parser.RceScriptParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="RceScript"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.enmo.dbaas.rcescript.psi"
+  psiImplPackage="com.enmo.dbaas.rcescript.psi.impl"
+
+  elementTypeHolderClass="com.enmo.dbaas.rcescript.psi.RceScriptTypes"
+  elementTypeClass="com.enmo.dbaas.rcescript.psi.RceScriptElementType"
+  tokenTypeClass="com.enmo.dbaas.rcescript.psi.RceScriptTokenType"
+}
+
+RceScriptFile ::= item_*
+
+private item_ ::= (COMMENT|setVarStatement|setTargetStatement|setControl|executeStatement|ifBlock|forBlock|breakStatement|sleepStatement|connectStatement|returnStatement|printStatement|CRLF)
+
+setControl ::= KEY_SET KEY_EXEC KEY_EXEC_STATUS KEY_CONTROL_STATUS
+
+setVarStatement ::= KEY_SET KEY_VAR VARIABLE_NAME SEPARATOR VARIABLE_VALUE
+
+setTargetStatement ::= KEY_SET KEY_TARGET VARIABLE_NAME
+
+executeStatement ::= KEY_EXECUTE RCE_PACHAGE VARIABLE_NAME SEPARATOR (VARIABLE_VALUE|NUMBER)( VARIABLE_NAME SEPARATOR (VARIABLE_VALUE|NUMBER|VARIABLE_NAME))*
+
+ifBlock ::= KEY_IF IF_CONDITION item_* KEY_ENDIF
+
+breakStatement ::= KEY_BREAK
+
+sleepStatement ::= KEY_SLEEP NUMBER
+
+forBlock ::= KEY_FOR NUMBER item_* KEY_ENDFOR
+
+connectStatement ::= KEY_CONNECT KEY_TARGET VARIABLE_NAME VARIABLE_NAME SEPARATOR (VARIABLE_VALUE|NUMBER)( VARIABLE_NAME SEPARATOR (VARIABLE_VALUE|NUMBER|VARIABLE_NAME))*
+
+returnStatement ::= KEY_RETURN VARIABLE_VALUE
+
+printStatement ::= KEY_PRINT VARIABLE_VALUE
